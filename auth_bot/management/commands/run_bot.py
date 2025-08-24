@@ -15,7 +15,7 @@ from telegram.ext import (
 )
 from datetime import datetime, timedelta
 
-EXPIRATION_TIME = 2
+EXPIRATION_TIME = 1
 PHONE_NUMBER_STATE = range(1)
 PHONE_REGEX = re.compile(r"^\+?\d{7,15}$")
 token = os.getenv("TOKEN")
@@ -85,7 +85,7 @@ async def phone_entity_handler(update, context):
             "phone_number": phone_number,
         }
         cache.set(code, user_data, timeout=60)
-        s = context.user_data.update(
+        context.user_data.update(
             {
                 "phone_number": phone_number,
                 "first_name": contact.first_name,
@@ -94,7 +94,6 @@ async def phone_entity_handler(update, context):
                 "expitation_time": datetime.now() + timedelta(minutes=EXPIRATION_TIME),
             }
         )
-        print(s)
 
         await update.message.reply_text(f"Kodingiz: {code} \n")
         await update.message.reply_text(f"Yangi kod olish uchun /login ni bosing")
